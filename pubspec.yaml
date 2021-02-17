@@ -24,13 +24,16 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
-  # Newly reworked plugins covered by this migration guide:
   firebase_core: ^0.5.0+1
   firebase_messaging: ^7.0.3
+  flutter_mobx: ^1.1.0+2
+  mobx: ^1.2.1+4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mobx_codegen: ^1.1.2
+  build_runner: ^1.11.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
