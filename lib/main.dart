@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
 class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
+
 class _AppState extends State<App> {
   // Set default `_initialized` and `_error` state to false
   bool _initialized = false;
@@ -47,10 +48,32 @@ class _AppState extends State<App> {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
+      Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) {
+        print('ON_BG_MESSAGE: $message');
+        return null;
+      }
+      if (await FirebaseMessaging().requestNotificationPermissions() == false) {
+        await FirebaseMessaging().requestNotificationPermissions();
+      } else {
+        FirebaseMessaging().configure(
+            onLaunch: (Map<String, dynamic> payload) {
+              print('ON_LAUNCH: $payload');
+              return null;
+            },
+            onBackgroundMessage: backgroundMessageHandler,
+            onMessage: (Map payload) {
+              print('ON_MESSAGE: $payload');
+              return null;
+            },
+            onResume: (Map payload) {
+              print('ON_RESUME: $payload');
+              return null;
+            });
+      }
       setState(() {
         _initialized = true;
       });
-    } catch(e) {
+    } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
       setState(() {
         _error = true;
@@ -67,7 +90,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     // Show error message if initialization failed
-    if(_error) {
+    if (_error) {
       return SomethingWentWrong();
     }
 
@@ -87,19 +110,12 @@ class SomethingWentWrong extends StatelessWidget {
   }
 }
 
-
 class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 }
-
-
-
-
-
-
 
 class MyAwesomeApp extends StatefulWidget {
   MyAwesomeApp({Key key, this.title}) : super(key: key);
